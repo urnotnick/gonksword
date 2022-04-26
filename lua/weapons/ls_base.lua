@@ -41,6 +41,8 @@ SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.Automatic = false
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.DefaultClip = 12
+SWEP.UnderwaterShooting = false
+SWEP.UnderwaterShootingLevel = 3
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -377,7 +379,13 @@ function SWEP:BurstThink()
 end
 
 function SWEP:CanShoot()
-	return self:CanPrimaryAttack() and not self:GetBursting() and not (self.LoweredPos and self:IsSprinting()) and self:GetReloadTime() < CurTime()
+	return self:CanPrimaryAttack() and not self:GetBursting() and not (self.LoweredPos and self:IsSprinting()) and self:GetReloadTime() < CurTime() and not self:ShootUnderwater(3)
+end
+
+function SWEP:ShootUnderwater(waterLevel) -- water level of what to not shoot at, usually 3 since completely submerged
+	if self.UnderwaterShooting then return end
+	if self.UnderwaterShootingLevel then waterLevel = self.UnderwaterShootingLevel end -- will override return value if set, useful for weapons that deviate from standard
+	return self.Owner and self.Owner:WaterLevel() >= waterLevel
 end
 
 function SWEP:ViewPunch()
