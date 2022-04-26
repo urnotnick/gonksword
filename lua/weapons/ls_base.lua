@@ -41,7 +41,7 @@ SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.Automatic = false
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.DefaultClip = 12
-SWEP.UnderwaterShooting = false
+SWEP.UnderwaterShooting = true
 SWEP.UnderwaterShootingLevel = 3
 
 SWEP.Secondary.Ammo = "none"
