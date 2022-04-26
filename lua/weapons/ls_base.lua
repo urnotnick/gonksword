@@ -41,6 +41,8 @@ SWEP.Primary.Ammo = "pistol"
 SWEP.Primary.Automatic = false
 SWEP.Primary.ClipSize = 12
 SWEP.Primary.DefaultClip = 12
+SWEP.UnderwaterShooting = true
+SWEP.UnderwaterShootingLevel = 3
 
 SWEP.Secondary.Ammo = "none"
 SWEP.Secondary.Automatic = false
@@ -377,7 +379,13 @@ function SWEP:BurstThink()
 end
 
 function SWEP:CanShoot()
-	return self:CanPrimaryAttack() and not self:GetBursting() and not (self.LoweredPos and self:IsSprinting()) and self:GetReloadTime() < CurTime()
+	return self:CanPrimaryAttack() and not self:GetBursting() and not (self.LoweredPos and self:IsSprinting()) and self:GetReloadTime() < CurTime() and not self:ShootUnderwater(3)
+end
+
+function SWEP:ShootUnderwater(waterLevel) -- water level of what to not shoot at, usually 3 since completely submerged
+	if self.UnderwaterShooting then return end
+	if self.UnderwaterShootingLevel then waterLevel = self.UnderwaterShootingLevel end -- will override return value if set, useful for weapons that deviate from standard
+	return self.Owner and self.Owner:WaterLevel() >= waterLevel
 end
 
 function SWEP:ViewPunch()
@@ -924,11 +932,14 @@ function SWEP:DrawHUD()
 		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 130)
 		surface.DrawText("Is Reloading: "..tostring(self:GetReloading()))
 
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 170)
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 150)
+		surface.DrawText("Water Level: "..tostring(self.Owner:WaterLevel()))
+
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 190)
 		surface.DrawText("Recoil Yaw Target: "..tostring(self.IronsightsRecoilYawTarget))
 
 		local ns = (self:GetNextPrimaryFire() or 0) - CurTime()
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 150)
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 170)
 		surface.DrawText("Next Shot: "..(ns > 0 and ns or "CLEAR"))
 
 		local attach = self:GetCurAttachment()
