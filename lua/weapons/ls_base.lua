@@ -932,11 +932,14 @@ function SWEP:DrawHUD()
 		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 130)
 		surface.DrawText("Is Reloading: "..tostring(self:GetReloading()))
 
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 170)
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 150)
+		surface.DrawText("Water Level: "..tostring(self.Owner:WaterLevel()))
+
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 190)
 		surface.DrawText("Recoil Yaw Target: "..tostring(self.IronsightsRecoilYawTarget))
 
 		local ns = (self:GetNextPrimaryFire() or 0) - CurTime()
-		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 150)
+		surface.SetTextPos((scrW / 2) + 30, (scrH / 2) + 170)
 		surface.DrawText("Next Shot: "..(ns > 0 and ns or "CLEAR"))
 
 		local attach = self:GetCurAttachment()
